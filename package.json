@@ -1,0 +1,21 @@
+{
+  "name": "oatmail",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.4.5",
+    "hjs": "*",
+    "less-middleware": "*",
+    "moment": "~2.5.0",
+    "mongoose": "*",
+    "connect-mongo": "*",
+    "tent-auth": "*",
+    "tent-discover": "*",
+    "tent-request": "*",
+    "mailgun-js": "*",
+    "google-caja": "*"
+  }
+}

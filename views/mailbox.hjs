@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Oatmail - ({{emailCount}})</title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />    
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <meta http-equiv="refresh" content="10; URL=/mailbox/{{folder}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://oatmail.io/">Oatmail</a>
+      </div>
+    
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="/compose">Compose</a></li>
+        </ul>
+       <!-- <form class="navbar-form navbar-left" role="search">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form> -->
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle active" id="chosenMailbox" data-toggle="dropdown">{{folderCap}}</a>
+            <ul class="dropdown-menu">
+              <li><a href="/mailbox/inbox" id="inbox">Inbox</a></li>    
+              <li><a href="/mailbox/sent" id="sent">Sent</a></li>    
+            </ul>      
+          </li>                
+           
+          <li class="dropdown">              
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ emailAddress }}</a>
+            <ul class="dropdown-menu">
+              <li><a href="{{entity}}">{{entity}}</a></li>
+              <li class="divider"></li>
+              <li><a href="/changeEntity">Change Tent Entity</a></li>
+              <li><a href="/registration">Change Email address</a></li>
+              <li class="divider"></li>
+              <li><a href="/logout">Sign Out</a></li>
+            </ul>      
+          </li>  
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>    
+    
+    <div class="container-full" id="emailList">
+      <div class="row">                            
+        <div class="col-md-12">
+          {{#emails}}
+          <a class="emailRowAnchor" style="display:block" href="/view/{{id}}">
+            <div class="row emailRow">      
+              <div class="col-md-2 emailFrom" title="{{emailAddress}}">
+                <strong>{{name}}</strong>                
+              </div>
+              <div class="col-md-8 emailSubject">
+                {{subject}} <span class="summary">{{summary}}</span>
+              </div>
+              <div class="col-md-2 emailDate">
+                <span class="whiteBack">{{date}}</span>
+              </div>
+            </div>
+          </a>
+          {{/emails}}         
+         </div>
+      </div>
+    </div>
+        
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script> 
+    <script src="/javascripts/bootstrap.min.js"></script>
+    
+  </body>
+</html>

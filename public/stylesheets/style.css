@@ -1,0 +1,128 @@
+#entitySignUpInput {
+   min-width: 300px; 
+}
+
+body {
+  padding-top: 55px;
+}
+
+.emailRow {
+  overflow: hidden;
+  max-height: 7.2em;
+  min-height: 3.6em;
+  line-height: 1.8em;
+  margin-bottom:10px;
+}
+
+.emailRow:hover {
+  background-color:#E3E3E3;
+  cursor: pointer;
+}
+
+.emailRowAnchor {
+  color: #333;
+}
+
+.emailRowAnchor:hover {
+  color: #333;
+  text-decoration: none;
+
+}
+
+.whiteBack {
+  background-color: #FFFFFF;
+  line-height:inherit;
+}
+
+
+.emailSubject {
+  max-height: 1.8em;
+}
+.emailDate {
+  max-height: 1.8em;
+}
+.emailFrom {
+  max-height: 3.6em;  
+}
+
+.container-full { 
+  padding: 0 15px; 
+}
+
+.dropdown {
+  padding-right: 10px; 
+}
+
+.emailDate {
+  text-align:right;
+}
+
+.summary {
+  color: rgb(204, 204, 204);
+}
+
+#emailComposeText {
+  width: 100%;
+  height: 100%;
+  border-top: solid 1px rgb(242, 242, 242);
+}
+
+#emailComposeSubject {
+  width: 100%;
+  border-width: 0px;
+
+}
+
+#sidebar {
+  word-wrap:break-word;
+}
+
+.sidebarInput {
+  width: 100%;
+  border-width: 0px;
+  resize:none;
+}
+
+#emailComposeText {
+ padding-top: 12px;
+ min-height: 180px; 
+}
+
+#emailComposeText:empty:not(:focus):before{
+  content:attr(data-ph);
+  color: rgb(204, 204, 204);
+}
+
+#sendAttachRow {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.grey {
+  color: rgb(204, 204, 204);
+}
+
+#messageId {
+  display:none;
+}
+
+#emailId {
+  display:none;
+}
+
+#reply {
+  margin-left: 10px;
+  margin-right: 15px;
+}
+
+#replyToAll {
+  margin-left: 10px;
+}
+
+.padding-bottom-100 {
+  padding-bottom:100px;
+}
+
+.padding-bottom-10 {
+  padding-bottom:10px;
+}

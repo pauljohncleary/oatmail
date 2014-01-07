@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Oatmail</title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />      
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-12-md">
+          <h1>Oatmail uses <a href="https://tent.io">tent</a> to store, send and recieve your emails</h1>
+          <p>We don't display ads, harvest content or undermine your privacy</p>
+          <hr />
+          <p>Enter your tent entity below to sign in to your mailbox or register your Oatmail address.</p>          
+        </div>
+      </div>
+      <div class="row padding-bottom-100">
+        <div class="col-12-md">    
+          <form name="tentUserReg" class="form-inline" action="/authenticate" method="POST">
+            <div class="form-group">
+              <input type="text" class="form-control" id="entitySignUpInput" name="entity" placeholder="e.g. https://pauljohncleary.cupcake.is" />
+            </div>            
+            <button type="submit" class="btn btn-primary pull-right">Sign In / Register</button>
+          </form>          
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12-md">
+         <p><strong>Oatmail is under heavy development, nothing is guaranteed and everything can change.</strong></p>
+         <p>If you don't already have a tent entity, you can get one at <a href="https://cupcake.io/">Cupcake.io</a></p>
+        </div>
+      </div>
+       
+      <div class="row">
+        <div class="col-12-md">
+          <hr />
+          <p>Oatmail is being built by <a href="https://pauljohncleary.cupcake.is/">^pauljohncleary.cupcake.is</a><p>
+          <p>Feel free to checkout and comment on the <a href="https://trello.com/b/De5UNpdN/oatmail-roadmap">Oatmail Roadmap</a></p>
+          <p>Source code will appear on github soon. We currently use <a href="http://www.mailgun.com/">Mailgun</a> as our mail server (there are plans to change this).</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

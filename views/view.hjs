@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Oatmail</title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />    
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <link rel='stylesheet' href='/pen/src/pen.css' />
+    <link rel='stylesheet' href='/stylesheets/animate.css' />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://oatmail.io/">Oatmail</a>
+      </div>
+    
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li><a href="/mailbox/inbox">Inbox</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">                         
+          <li class="dropdown">              
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="emailDropdown">{{ emailAddress }}</a>
+            <ul class="dropdown-menu">
+              <li><a href="{{entity}}">{{entity}}</a></li>
+              <li class="divider"></li>
+              <li><a href="/changeEntity">Change Tent Entity</a></li>
+              <li><a href="/registration">Change Email address</a></li>
+              <li class="divider"></li>
+              <li><a href="/logout">Sign Out</a></li>
+            </ul>      
+          </li>  
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>    
+      
+    <div class="container-full" id="siderbarAndComposer">
+      <div class="row">
+        <div class="col-md-3 col-sm-12" id="sidebar">
+          <div class="row">
+            <div class="col-md-3 col-sm-3 hidden-xs">
+              <h4><span class="grey">Sent </span></h4>
+            </div>
+            <div class="col-md-9">
+              <h4 id="emailDate">{{date}}</h4>
+            </div>
+          </div>
+           <div class="row">
+            <div class="col-md-3 col-sm-3 hidden-xs">
+              <h4><span class="grey">From </span></h4>
+            </div>
+            <div class="col-md-9">
+              <h4 id="from">{{from}}</h4>
+            </div>
+          </div>         
+          <div class="row">
+            <div class="col-md-3 col-sm-3 hidden-xs">
+              <h4><span class="grey">To </span></h4>
+            </div>
+            <div class="col-md-9 hidden-sm hidden-xs">
+              <h4 id="to">{{to}}</h4>
+            </div>
+          </div>    
+          <div class="row">
+            <div class="col-md-3 col-sm-3 hidden-xs">
+              <h4><span class="grey">CC </span></h4>
+            </div>
+            <div class="col-md-9 hidden-sm hidden-xs">
+              <h4 id="cc">{{cc}}</h4>
+            </div>
+          </div>             
+          <hr class="hidden-md hidden-lg" />
+          <div id="messageId">{{messageId}}</div>  
+          <div id="emailId">{{id}}</div>
+        </div> <!-- /sidebar -->
+        
+        <div class="col-md-9 col-sm-12" id="composer">
+          <div class="row">
+            <div class="col-md-12">
+              <h4 id="subject">{{subject}}</h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <div id="emailComposeText">{{{body}}}</div>
+            </div>
+          </div>              
+          <div class="row"  id="sendAttachRow">
+            <div class="col-xs-6">
+              <button type="button" id="delete" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button>
+            </div>
+            <div class="col-xs-offset-2">
+              <a href="../compose/reply/{{id}}" id="reply" class="btn btn-primary pull-right" >Reply</a>              
+              <a href="../compose/replyAll/{{id}}" id="replyToAll" class="btn btn-default pull-right" >Reply to All</a>              
+              <a href="../compose/forward/{{id}}" id="forward" class="btn btn-default pull-right">Forward</a>
+            </div>
+          </div>
+        </div> <!-- /composer -->
+      </div>
+    </div>  
+    
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script> 
+    <script src="/javascripts/bootstrap.min.js"></script>
+    <script src="/pen/src/pen.js"></script>
+    <script src="/javascripts/view.js"></script>
+    
+  </body>
+</html>

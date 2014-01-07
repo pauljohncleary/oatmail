@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Oatmail</title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />  
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+         <div class="col-12-m">
+           <h2>Choose your Oatmail address</h2>
+           <p>This will be used to send and recieve emails to/from Oatmail</p>
+           <p>Emails sent here will be stored in your tent server and be accessible by any email supporting app you choose</p>
+           <hr />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12-m">
+          <form name="registerEmail" class="form-inline" action="/registerEmail" method="POST">
+            <div class="form-group">
+              <input type="text" class="form-control" name="email" />
+            </div>
+            @oatmail.io
+            <button type="submit" class="btn btn-default pull-right">Register</button>
+          </form>
+        </div>       
+      </div>
+    </div>
+        
+  </body>
+</html>
