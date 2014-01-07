@@ -37,7 +37,7 @@
           <hr />
           <p>Oatmail is being built by <a href="https://pauljohncleary.cupcake.is/">^pauljohncleary.cupcake.is</a><p>
           <p>Feel free to checkout and comment on the <a href="https://trello.com/b/De5UNpdN/oatmail-roadmap">Oatmail Roadmap</a></p>
-          <p>Source code is on github: <a href="https://github.com/pauljohncleary/oatmail"></a> We currently use <a href="http://www.mailgun.com/">Mailgun</a> as our mail server (there are plans to change this).</p>
+          <p>Source code is on github: <a href="https://github.com/pauljohncleary/oatmail">https://github.com/pauljohncleary/oatmail</a> We currently use <a href="http://www.mailgun.com/">Mailgun</a> as our mail server (there are plans to change this).</p>
         </div>
       </div>
     </div>
