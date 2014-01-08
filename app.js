@@ -72,11 +72,11 @@ app.post('/authenticate', function(req, res){
   
   var entity = req.body.entity;
   
-  //check entity begins in https://
-  var regex = /^https:/
+  //check entity begins in https:// or http://
+  var regex = /^https:|http:/
   var result = regex.exec(entity);
   if (!result) {
-    return res.json("error: tent address must start with https://")
+    return res.json("error: tent address must start with https:// or http://")
   }
   
   //if the entity (user) already registered the app, skip the registration skip and directly obtain refreshed tokens ("login")
