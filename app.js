@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -24,7 +23,6 @@ app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hjs');
 app.use(express.favicon());
-//app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
@@ -44,9 +42,29 @@ app.use(app.router);
 app.use(require('less-middleware')({ src: path.join(__dirname, 'public') }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// development only
+// development vs prod
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
+  app.use(express.logger('dev'));
+  var tentAppConfig = {
+    name: 'Oatmail Dev App',
+    url: 'http://http://dragonstone-nodejs-56183.euw1.nitrousbox.com',
+    redirect_uri: 'http://http://dragonstone-nodejs-56183.euw1.nitrousbox.com/auth/callback/',
+    types: {
+      read: [ 'https://oatmail.io/types/email/v0' ],
+      write: [ 'https://oatmail.io/types/email/v0' ]
+    }
+  }    
+} else {
+  var tentAppConfig = {
+    name: 'Oatmail',
+    url: 'http://oatmail.io',
+    redirect_uri: 'http://oatmail.io/auth/callback/',
+    types: {
+      read: [ 'https://oatmail.io/types/email/v0' ],
+      write: [ 'https://oatmail.io/types/email/v0' ]
+    }
+  }  
 }
 app.get('/', routes.index);
 app.get('/mailbox/:folder', routes.mailbox);
@@ -58,17 +76,6 @@ app.get('/compose/:type/:id', routes.compose);
 
 
 app.post('/authenticate', function(req, res){
-                                    
-  // https://tent.io/docs/post-types#app
-  var app = {
-          name: 'Oatmail',
-          url: 'http://oatmail.io',
-          redirect_uri: 'http://oatmail.io/auth/callback/',
-          types: {
-                  read: [ 'https://oatmail.io/types/email/v0' ],
-                  write: [ 'https://oatmail.io/types/email/v0' ]
-          }
-  }  
   
   var entity = req.body.entity;
   
@@ -117,14 +124,14 @@ app.post('/authenticate', function(req, res){
       store.meta = meta
     
       // we have to clone the app object, to not modify the global one
-      var cApp = JSON.parse(JSON.stringify(app))
+      var cTentAppConfig = JSON.parse(JSON.stringify(tentAppConfig))
     
       // the callback needs to identify to whom the code belongs
-      cApp.redirect_uri += tempAuthId
+      cTentAppConfig.redirect_uri += tempAuthId
     
       // register the app with the server
       // this step is skipped the next time
-      auth.registerApp(meta.post.content, cApp,
+      auth.registerApp(meta.post.content, cTentAppConfig,
         function(err, tempCreds, appID) {
           if(err) return res.send(err)
             store.appID = appID
