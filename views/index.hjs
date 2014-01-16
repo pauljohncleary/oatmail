@@ -19,13 +19,13 @@
         <div class="col-12-md">    
           <form name="tentUserReg" class="form-inline" action="/authenticate" method="POST">
             <div class="form-group">
-              <input type="text" class="form-control" id="protocol" value="https://" />
+              <input type="text" class="form-control" id="protocolInput" name="protocol" value="https://" />
             </div>
             <div class="form-group">
               <input type="text" class="form-control" id="entitySignUpInput" name="entity" placeholder="your entity" />
             </div>
             <div class="form-group">              
-              <input class="form-control" id="tentHost" value=".cupcake.is" />
+              <input class="form-control" id="tentHostInput" name="tentHost" value=".cupcake.is" />
             </div>            
             <button type="submit" class="btn btn-primary pull-right">Sign In / Register</button>
           </form>             

@@ -77,7 +77,7 @@ app.get('/compose/:type/:id', routes.compose);
 
 app.post('/authenticate', function(req, res){
   
-  var entity = req.body.entity;
+  var entity = req.body.protocol + req.body.entity + req.body.tentHost;
   
   //check entity begins in https:// or http://
   var regex = /^https:|http:/
