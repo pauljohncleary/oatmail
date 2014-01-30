@@ -48,8 +48,8 @@ if ('development' == app.get('env')) {
   app.use(express.logger('dev'));
   var tentAppConfig = {
     name: 'Oatmail Dev App',
-    url: 'http://http://dragonstone-nodejs-56183.euw1.nitrousbox.com',
-    redirect_uri: 'http://http://dragonstone-nodejs-56183.euw1.nitrousbox.com/auth/callback/',
+    url: 'http://dragonstone-nodejs-56183.euw1.nitrousbox.com',
+    redirect_uri: 'http://dragonstone-nodejs-56183.euw1.nitrousbox.com/auth/callback/',
     types: {
       read: [ 'https://oatmail.io/types/email/v0' ],
       write: [ 'https://oatmail.io/types/email/v0' ]
@@ -283,7 +283,7 @@ app.post('/api/sendEmail', function(req, res){
 
 var addEmailToTent = function (email, meta, creds) {
   //dump the request into tent entity address
-  var tentClient = tentRequest.createClient(meta, creds);      
+  var tentClient = tentRequest(meta, creds);      
   console.log("storing email with subject: " + email.subject);
                    
   tentClient.create('https://oatmail.io/types/email/v0#',
@@ -329,7 +329,7 @@ app.post('/api/deleteEmail', function(req, res){
   var id = req.body.id;
   var meta = req.session.entityStore.store.meta;
   var creds = req.session.entityStore.store.creds;
-  var tentClient = tentRequest.createClient(meta, creds);     
+  var tentClient = tentRequest(meta, creds);     
   tentClient.delete(id, function(error, response, body) {
     if(error) {
       console.log(error); 

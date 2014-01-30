@@ -36,7 +36,7 @@ var getEmails = function(req, res, folder, callback) {
   var tentRequest = require('tent-request');
   var meta = req.session.entityStore.store.meta;
   var creds = req.session.entityStore.store.creds; 
-  var tentClient = tentRequest.createClient(meta, creds); 
+  var tentClient = tentRequest(meta, creds); 
 
   var query = {
     types: 'https://oatmail.io/types/email/v0#',
@@ -221,7 +221,7 @@ var getEmailByID = function(req, res, id, callback) {
   var tentRequest = require('tent-request');
   var meta = req.session.entityStore.store.meta;
   var creds = req.session.entityStore.store.creds;
-  var tentClient = tentRequest.createClient(meta, creds); 
+  var tentClient = tentRequest(meta, creds); 
 
   var query = {
     types: 'https://oatmail.io/types/email/v0#',
