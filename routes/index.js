@@ -36,8 +36,17 @@ var getEmails = function(req, res, folder, callback) {
   var tentRequest = require('tent-request');
   var meta = req.session.entityStore.store.meta;
   var creds = req.session.entityStore.store.creds; 
-  var tentClient = tentRequest.createClient(meta, creds);  
-  var emailRequest = tentClient.query(function(err, response, body) {
+  var tentClient = tentRequest.createClient(meta, creds); 
+
+  var query = {
+    types: 'https://oatmail.io/types/email/v0#',
+    sortBy: 'published_at',
+    limit: 10000
+  };
+
+  var emailRequest = tentClient.query(query, cb);
+
+  function cb(err, response, body) {
     if(err) {
       return console.log(err)
     } else { 
@@ -84,7 +93,7 @@ var getEmails = function(req, res, folder, callback) {
       return callback(emails)
     }
     
-  }).types('https://oatmail.io/types/email/v0#').sortBy('published_at').limit(10000);
+  }
 }
 
 exports.mailbox = function(req, res) {
@@ -212,8 +221,14 @@ var getEmailByID = function(req, res, id, callback) {
   var tentRequest = require('tent-request');
   var meta = req.session.entityStore.store.meta;
   var creds = req.session.entityStore.store.creds;
-  var tentClient = tentRequest.createClient(meta, creds);  
-  var emailRequest = tentClient.query(function(err, response, body) {
+  var tentClient = tentRequest.createClient(meta, creds); 
+
+  var query = {
+    types: 'https://oatmail.io/types/email/v0#',
+    sortBy: 'published_at'
+  };
+
+  var emailRequest = tentClient.query(query, function(err, response, body) {
     for (var i = 0; i < body.posts.length; i++) {  
       if(body.posts[i].id === id) {           
         var email = body.posts[i].content;
@@ -222,6 +237,6 @@ var getEmailByID = function(req, res, id, callback) {
       }
     }
     return callback(email);
-  }).types('https://oatmail.io/types/email/v0#').sortBy('published_at');
+  })
   
 }

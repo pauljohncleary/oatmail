@@ -286,10 +286,8 @@ var addEmailToTent = function (email, meta, creds) {
   var tentClient = tentRequest.createClient(meta, creds);      
   console.log("storing email with subject: " + email.subject);
                    
-  tentClient.create()
-    .type('https://oatmail.io/types/email/v0#')
-    .content(email)
-    .permissions(false);
+  tentClient.create('https://oatmail.io/types/email/v0#',
+    { permissions: false }, email);
   
   //need to check this actually succeeded before we return 200!
           
