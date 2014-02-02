@@ -234,37 +234,52 @@ app.get("/logout", function(req, res) {
 });
 
 /*API FUNCTIONS */
+
 app.post("/api/recieve", function(req, res) {
-  var email = req.body;
-  //check for attachments -attachments seem to screw up the body? :S
-  if(typeof(email.recipient) !== 'undefined') {  
-    var recipient = email.recipient;
-    //turn recipent into an array of recepients
-    var recipients = recipient.split(", ");
-  
-    for (var i = 0; i < recipients.length; i++) {
-      var currentRecipient = recipients[i];
-        
-      db.checkEmailExists(currentRecipient, function(doc) {
-        if(doc) {
-          email.folder = "inbox";
-          var meta = doc.store.meta;
-          var creds = doc.store.creds;
-          return res.send(addEmailToTent(email, meta, creds));         
-        }
-        else {
-          return res.send(200);
-          console.log(currentRecipient + " is not an oatmail registered address (need to hook into mailguns bounces api to do this properly next time)");
-        }        
-      });
-    }  
+  var email = req.body,
+    allRecipients = email.to.concat(email.cc,email.bcc),
+
+  checkOatmailAddressExists(allRecipients, email, function(exists) {
+    if (exists) {
+      //success!
+      return res.send(200);
+    } else {
+      //none of the recipients are registered with oatmail.io
+      return res.send(404);
+    }
+  })  
+}
+
+var checkOatmailAddressExists = function(allRecipients, email, callback) {
+  for (var i = 0; i < allRecipients.length; i++) {
+    var recipient = allRecipients[i],
+      addressFound = false;
+
+    db.checkEmailExists(recipient, function(doc) {
+      if(doc) {
+        oatmailAddressFound = true;
+        var meta = doc.store.meta;
+        var creds = doc.store.creds;
+        addEmailToTent(email, meta, creds); 
+        addressFound = true;
+      }
+      else {
+      }     
+
+      if (addressFound === true) {
+        return true;
+      }   
+      else {
+        return false;
+      }
+
+    });
   }
-  else {
-    console.log("email has attachments - not yet supported");
-    return res.send(200);
-  }
-    
+};
+
+
 });
+
 
 app.post('/api/sendEmail', function(req, res){
   var email = req.body;
@@ -285,10 +300,22 @@ var addEmailToTent = function (email, meta, creds) {
   //dump the request into tent entity address
   var tentClient = tentRequest(meta, creds);      
   console.log("storing email with subject: " + email.subject);
+
                    
   tentClient.create('https://oatmail.io/types/email/v0#',
     { permissions: false }, email);
-  
+
+  var emailMeta = {};
+  emailMeta.direction = "incoming";
+  emailMeta.draft = false;
+  emailMeta.folder = "inbox";
+  emailMeta.ref = ???;
+
+
+  //need to also create the emailmeta type
+  tentClient.create('https://oatmail.io/types/emailMetaType/v0#',
+    { permissions: false }, emailMeta);
+
   //need to check this actually succeeded before we return 200!
           
   return 200;
