@@ -8,6 +8,7 @@ var http = require('http');
 var path = require('path');
 var config = require('./config');
 var db = require('./database');
+var request = require('request');
 
 var auth = require('tent-auth');
 var discover = require('tent-discover');
@@ -237,48 +238,46 @@ app.get("/logout", function(req, res) {
 
 app.post("/api/recieve", function(req, res) {
   var email = req.body,
-    allRecipients = email.to.concat(email.cc,email.bcc),
+    allRecipients = email.to.concat(email.cc,email.bcc);
 
   checkOatmailAddressExists(allRecipients, email, function(exists) {
-    if (exists) {
-      //success!
+    if(exists) {
       return res.send(200);
     } else {
       //none of the recipients are registered with oatmail.io
       return res.send(404);
     }
-  })  
-}
+  });
+});
 
 var checkOatmailAddressExists = function(allRecipients, email, callback) {
+  var addressFound = false;
+
   for (var i = 0; i < allRecipients.length; i++) {
-    var recipient = allRecipients[i],
-      addressFound = false;
+    var recipient = allRecipients[i];
 
     db.checkEmailExists(recipient, function(doc) {
       if(doc) {
-        oatmailAddressFound = true;
-        var meta = doc.store.meta;
-        var creds = doc.store.creds;
-        addEmailToTent(email, meta, creds); 
+        //create the meta post for the app
+        var emailMeta = {};
+        emailMeta.direction = "incoming";
+        emailMeta.draft = false;
+        emailMeta.folder = "inbox";
+
+        addEmailToTent(email, emailMeta, doc.store.meta, doc.store.creds); 
         addressFound = true;
       }
-      else {
-      }     
-
-      if (addressFound === true) {
-        return true;
-      }   
-      else {
-        return false;
-      }
-
     });
   }
+
+  if (addressFound === true) {
+    return callback(true);
+  }
+  else {
+    return callback(false);
+  }
+
 };
-
-
-});
 
 
 app.post('/api/sendEmail', function(req, res){
@@ -290,54 +289,68 @@ app.post('/api/sendEmail', function(req, res){
     email.folder = "sent";
     var meta = req.session.entityStore.store.meta;
     var creds = req.session.entityStore.store.creds;
-    addEmailToTent(email, meta, creds);
+
+    //create the meta post for the app
+    var emailMeta = {};
+    emailMeta.direction = "outgoing";
+    emailMeta.draft = false;
+    emailMeta.folder = "sent";
+
+    addEmailToTent(email, emailMeta, meta, creds);
+
     return res.send(statusCode);
   })
 
 });
 
-var addEmailToTent = function (email, meta, creds) {
+var addEmailToTent = function (email, emailMeta, meta, creds) {
   //dump the request into tent entity address
   var tentClient = tentRequest(meta, creds);      
   console.log("storing email with subject: " + email.subject);
-
                    
   tentClient.create('https://oatmail.io/types/email/v0#',
-    { permissions: false }, email);
+    { permissions: false }, 
+    email, 
+    function(err, resonse, body) {
+      if(!err) {
 
-  var emailMeta = {};
-  emailMeta.direction = "incoming";
-  emailMeta.draft = false;
-  emailMeta.folder = "inbox";
-  emailMeta.ref = ???;
+        //this needs fixing at 0.4 to a link
+        emailMeta.ref = body.id;
 
+        tentClient.create('https://oatmail.io/types/emailMetaType/v0#',
+          { permissions: false }, 
+          emailMeta, 
+          function(err, response, body) {
+            if(!err) {
+              return 200;
+            } else {
+              console.log(err);
+            }
+          }
+        );
 
-  //need to also create the emailmeta type
-  tentClient.create('https://oatmail.io/types/emailMetaType/v0#',
-    { permissions: false }, emailMeta);
+      } else {
+        console.log(err);
+      }
+    }
 
-  //need to check this actually succeeded before we return 200!
-          
-  return 200;
+  );
 }
 
 
 var sendEmail = function(email, callback) {
-    var mailGunCreds = config.mailGun();  
-    var api_key = mailGunCreds.api_key;
-    var domain = mailGunCreds.domain;
-  
-    var mailgun = require('mailgun-js')(api_key, domain);
-  
-    console.log(email);
 
-    mailgun.messages.send(email, function (error, response, body) {
-      if(error) {
-        console.log(error);
-      } else {
-        callback(response.statusCode);
-      }
-    });
+  var reqOptions = {
+    url: 'https://oatmail.io/smtp/send',
+    method: "POST",     
+    body: email,
+    json: true,
+    strictSSL: true
+  }
+
+  request(reqOptions, function(error, response, body) {
+    callback(error, response, body);
+  });
 }
 
 //this is called when a new user registers their email address
@@ -349,7 +362,7 @@ var sendWelcomeEmail = function(emailAddress) {
   email.html = "Thanks for signing up, if you have any questions, issues or ideas reply back to this oatmail or contact me at ^pauljohncleary.cupcake.is"
   email["stripped-text"] = email.html;
 
-  sendEmail(email, function() {});
+  sendEmail(email, function(error, response, body) {});
 }
 
 app.post('/api/deleteEmail', function(req, res){

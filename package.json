@@ -15,7 +15,7 @@
     "tent-auth": "~0.2.5",
     "tent-discover": "~0.3.0",
     "tent-request": "~0.4.0",
-    "mailgun-js": "*",
-    "google-caja": "*"
+    "google-caja": "*",
+    "request": "*" 
   }
 }
