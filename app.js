@@ -53,7 +53,9 @@ if ('development' == app.get('env')) {
     redirect_uri: 'http://dragonstone-nodejs-56183.euw1.nitrousbox.com/auth/callback/',
     types: {
       read: [ 'https://oatmail.io/types/email/v0' ],
-      write: [ 'https://oatmail.io/types/email/v0' ]
+      write: [ 'https://oatmail.io/types/email/v0' ],
+      read: [ 'https://oatmail.io/types/emailMeta/v0' ],
+      write: [ 'https://oatmail.io/types/emailMeta/v0' ]
     }
   }    
 } else {
@@ -63,7 +65,9 @@ if ('development' == app.get('env')) {
     redirect_uri: 'http://oatmail.io/auth/callback/',
     types: {
       read: [ 'https://oatmail.io/types/email/v0' ],
-      write: [ 'https://oatmail.io/types/email/v0' ]
+      write: [ 'https://oatmail.io/types/email/v0' ],
+      read: [ 'https://oatmail.io/types/emailMeta/v0' ],
+      write: [ 'https://oatmail.io/types/emailMeta/v0' ]      
     }
   }  
 }
