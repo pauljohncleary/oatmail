@@ -53,7 +53,9 @@ if ('development' == app.get('env')) {
     redirect_uri: 'http://dragonstone-nodejs-56183.euw1.nitrousbox.com/auth/callback/',
     types: {
       read: [ 'https://oatmail.io/types/email/v0' ],
-      write: [ 'https://oatmail.io/types/email/v0' ]
+      write: [ 'https://oatmail.io/types/email/v0' ],
+      read: [ 'https://oatmail.io/types/emailMeta/v0' ],
+      write: [ 'https://oatmail.io/types/emailMeta/v0' ]
     }
   }    
 } else {
@@ -63,7 +65,9 @@ if ('development' == app.get('env')) {
     redirect_uri: 'http://oatmail.io/auth/callback/',
     types: {
       read: [ 'https://oatmail.io/types/email/v0' ],
-      write: [ 'https://oatmail.io/types/email/v0' ]
+      write: [ 'https://oatmail.io/types/email/v0' ],
+      read: [ 'https://oatmail.io/types/emailMeta/v0' ],
+      write: [ 'https://oatmail.io/types/emailMeta/v0' ]      
     }
   }  
 }
@@ -238,8 +242,8 @@ app.get("/logout", function(req, res) {
 
 app.post("/api/recieve", function(req, res) {
   var email = req.body,
-    allRecipients = email.to.concat(email.cc,email.bcc);
-
+    allRecipients = email.to.concat(email.cc,email.bcc);      
+  
   checkOatmailAddressExists(allRecipients, email, function(exists) {
     if(exists) {
       return res.send(200);
@@ -254,20 +258,23 @@ var checkOatmailAddressExists = function(allRecipients, email, callback) {
   var addressFound = false;
 
   for (var i = 0; i < allRecipients.length; i++) {
-    var recipient = allRecipients[i];
+    if(typeof(allRecipients[i]) !== 'undefined') {
+      var recipient = allRecipients[i].address;
+       
+      db.checkEmailExists(recipient, function(doc) {
+        if(doc) {
+          //create the meta post for the app
+          var emailMeta = {};
+          emailMeta.direction = "incoming";
+          emailMeta.draft = false;
+          emailMeta.folder = "inbox";
+  
+          addEmailToTent(email, emailMeta, doc.store.meta, doc.store.creds); 
+          addressFound = true;
+        }
+      });      
+    }
 
-    db.checkEmailExists(recipient, function(doc) {
-      if(doc) {
-        //create the meta post for the app
-        var emailMeta = {};
-        emailMeta.direction = "incoming";
-        emailMeta.draft = false;
-        emailMeta.folder = "inbox";
-
-        addEmailToTent(email, emailMeta, doc.store.meta, doc.store.creds); 
-        addressFound = true;
-      }
-    });
   }
 
   if (addressFound === true) {
