@@ -29,11 +29,53 @@ exports.registration = function(req, res){
 /****
 MAILBOX CODE
 
+1. User opens /mailbox/inbox (or another folder)
+2. Render view without emails
+3. Use getFolderEmailMeta(req,res,folder,[callback]) to get the #of emails for that folder and IDs
+4. Once getEmailMeta returns, populate the view with the number of emails returned
+5. Then call getEmails for the first 50 emails returned
+6. 
+
 ****/
 
+//for time/date manipulations
 var moment = require('moment');
+var tentRequest = require('tent-request');
+
+
+//returns the callback with the number of emails and an array of the emailIds for the inbox 
+var getFolderEmailMeta = function(req, res, folder, callback) {
+  var meta = req.session.entityStore.store.meta;
+  var creds = req.session.entityStore.store.creds; 
+  var tentClient = tentRequest(meta, creds);
+  var query = {
+    types: 'https://oatmail.io/types/emailMeta/v0#',
+    sortBy: 'published_at',
+    limit: 20000
+  }; 
+
+  var emailMetaRequest = tentClient.query(query, function (err, res, body){
+    if(err) {
+      return console.log(err)
+    } else { 
+        var emailCount = body.posts.length,
+          emailIds = [];
+
+        for (var i = 0; i < emailCount; i++) {   
+          //THIS NEEDS TO BE CHANGED AT 0.4 AND WON'T WORK YET
+          emailIds[i] = body.posts[i].content.ref;
+        }
+
+        return callback(emailCount, emailIds);
+
+    }
+
+  });
+
+}
+
+
 var getEmails = function(req, res, folder, callback) {
-  var tentRequest = require('tent-request');
   var meta = req.session.entityStore.store.meta;
   var creds = req.session.entityStore.store.creds; 
   var tentClient = tentRequest(meta, creds); 
