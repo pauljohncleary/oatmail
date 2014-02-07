@@ -43,7 +43,7 @@ var moment = require('moment');
 var tentRequest = require('tent-request');
 
 
-//returns the callback with the number of emails and an array of the emailIds for the inbox 
+//returns the callback with the number of emails and an array of the emailIds for the mailbox 
 var getFolderEmailMeta = function(req, res, folder, callback) {
   var meta = req.session.entityStore.store.meta;
   var creds = req.session.entityStore.store.creds; 
@@ -74,7 +74,7 @@ var getFolderEmailMeta = function(req, res, folder, callback) {
 
 }
 
-
+//returns the email posts for the array of Ids specified 
 var getEmails = function(req, res, folder, callback) {
   var meta = req.session.entityStore.store.meta;
   var creds = req.session.entityStore.store.creds; 
