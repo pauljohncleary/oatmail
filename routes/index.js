@@ -258,27 +258,19 @@ exports.view = function(req, res) {
   });
 }
 
+//get an individual email from the tent server- this may be redundant in the new design
 var getEmailByID = function(req, res, id, callback) {
   
-  var tentRequest = require('tent-request');
   var meta = req.session.entityStore.store.meta;
   var creds = req.session.entityStore.store.creds;
   var tentClient = tentRequest(meta, creds); 
 
-  var query = {
-    types: 'https://oatmail.io/types/email/v0#',
-    sortBy: 'published_at'
-  };
-
-  var emailRequest = tentClient.query(query, function(err, response, body) {
-    for (var i = 0; i < body.posts.length; i++) {  
-      if(body.posts[i].id === id) {           
-        var email = body.posts[i].content;
-        //add recieved at    
-        email.received_at = moment(body.posts[i].received_at).format("MMMM Do YYYY, h:mm:ss a");
-      }
+  tentClient.get(id, req.session.entity, function(err, response, body) {
+    if(error) {
+      console.log(error)
+     } else {
+      return callback(body);
     }
-    return callback(email);
-  })
-  
+  });
+
 }
