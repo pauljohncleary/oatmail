@@ -52,10 +52,8 @@ if ('development' == app.get('env')) {
     url: 'http://dragonstone-nodejs-56183.euw1.nitrousbox.com',
     redirect_uri: 'http://dragonstone-nodejs-56183.euw1.nitrousbox.com/auth/callback/',
     types: {
-      read: [ 'https://oatmail.io/types/email/v0' ],
-      write: [ 'https://oatmail.io/types/email/v0' ],
-      read: [ 'https://oatmail.io/types/emailMeta/v0' ],
-      write: [ 'https://oatmail.io/types/emailMeta/v0' ]
+      read: [ 'https://oatmail.io/types/email/v0', 'https://oatmail.io/types/emailMeta/v0' ],
+      write: [ 'https://oatmail.io/types/email/v0', 'https://oatmail.io/types/emailMeta/v0' ]
     }
   }    
 } else {
@@ -64,10 +62,8 @@ if ('development' == app.get('env')) {
     url: 'http://oatmail.io',
     redirect_uri: 'http://oatmail.io/auth/callback/',
     types: {
-      read: [ 'https://oatmail.io/types/email/v0' ],
-      write: [ 'https://oatmail.io/types/email/v0' ],
-      read: [ 'https://oatmail.io/types/emailMeta/v0' ],
-      write: [ 'https://oatmail.io/types/emailMeta/v0' ]      
+      read: [ 'https://oatmail.io/types/email/v0', 'https://oatmail.io/types/emailMeta/v0' ],
+      write: [ 'https://oatmail.io/types/email/v0', 'https://oatmail.io/types/emailMeta/v0' ]
     }
   }  
 }
@@ -121,13 +117,13 @@ app.post('/authenticate', function(req, res){
     var tempAuthId = db.createTempAuth(entity, store);
     
     discover(entity, function(err, meta) {      
-      if(err && err.code == "ENOTFOUND") {
+      if(err) {
         //entity not found
         return res.send("entity not found, press the back key and try again");
       }
        
       store.meta = meta
-    
+          
       // we have to clone the app object, to not modify the global one
       var cTentAppConfig = JSON.parse(JSON.stringify(tentAppConfig))
     
@@ -178,7 +174,7 @@ app.get('/auth/callback/:id', function(req, res) {
         function(err, permaCreds) {
 
           if(err) {
-            console.log("err:" + err);
+            console.log("err: " + err);
             return res.send(err);
           } else {
                        
@@ -268,7 +264,7 @@ var checkOatmailAddressExists = function(allRecipients, email, callback) {
           emailMeta.direction = "incoming";
           emailMeta.draft = false;
           emailMeta.folder = "inbox";
-  
+
           addEmailToTent(email, emailMeta, doc.store.meta, doc.store.creds); 
           addressFound = true;
         }
@@ -292,8 +288,13 @@ app.post('/api/sendEmail', function(req, res){
   
   //need to check if a reply, attachments, validate the user input, anything else?
 
-  sendEmail(email, function(statusCode) {
-    email.folder = "sent";
+  sendEmail(email, function(error, response, body) {
+    
+    if(error) {
+      console.log(error);
+      return res.send(500);
+    }    
+    
     var meta = req.session.entityStore.store.meta;
     var creds = req.session.entityStore.store.creds;
 
@@ -305,7 +306,7 @@ app.post('/api/sendEmail', function(req, res){
 
     addEmailToTent(email, emailMeta, meta, creds);
 
-    return res.send(statusCode);
+    return res.send(200);
   })
 
 });
@@ -324,7 +325,7 @@ var addEmailToTent = function (email, emailMeta, meta, creds) {
         //this needs fixing at 0.4 to a link
         emailMeta.ref = body.id;
 
-        tentClient.create('https://oatmail.io/types/emailMetaType/v0#',
+        tentClient.create('https://oatmail.io/types/emailMeta/v0#',
           { permissions: false }, 
           emailMeta, 
           function(err, response, body) {
@@ -348,11 +349,11 @@ var addEmailToTent = function (email, emailMeta, meta, creds) {
 var sendEmail = function(email, callback) {
 
   var reqOptions = {
-    url: 'https://oatmail.io/smtp/send',
+    url: 'http://107.170.4.31:3000/smtp/send',
     method: "POST",     
     body: email,
     json: true,
-    strictSSL: true
+    strictSSL: false
   }
 
   request(reqOptions, function(error, response, body) {
